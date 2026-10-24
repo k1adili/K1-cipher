@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.K1Cipher" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/k1_bg</item>
+        <item name="android:statusBarColor">@color/k1_bg</item>
+        <item name="android:navigationBarColor">@color/k1_bg</item>
+    </style>
+</resources>
