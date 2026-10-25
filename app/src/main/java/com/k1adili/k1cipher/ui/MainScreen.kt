@@ -84,15 +84,15 @@ fun MainScreen(
                     "K1 Cipher",
                     color = K1.Blue,
                     fontSize = (56f * scale).sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Black,
                     maxLines = 1,
                     softWrap = false,
                 )
                 Text(
                     "Encrypt and decrypt your text and share\nto other app or save in file",
                     color = K1.Subtitle,
-                    fontSize = 16.sp,
-                    lineHeight = 23.sp,
+                    fontSize = (13f * scale).sp,
+                    lineHeight = (19f * scale).sp,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(Modifier.height(22.dp))
