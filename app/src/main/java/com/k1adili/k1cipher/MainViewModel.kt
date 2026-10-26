@@ -127,6 +127,17 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /** Text scanned from a QR code: accepted only if it is K1 Cipher text. */
+    fun receiveQr(text: String) {
+        val t = text.filterNot { it.isWhitespace() }
+        if (K1Crypto.looksEncrypted(t)) {
+            encrypted = t
+            say("QR code scanned – press DECRYPT")
+        } else {
+            say("This QR code is not K1 Cipher text")
+        }
+    }
+
     // ---------- share / files ----------
 
     fun shareText(): String? {

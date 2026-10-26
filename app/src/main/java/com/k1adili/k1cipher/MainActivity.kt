@@ -15,6 +15,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.k1adili.k1cipher.ui.K1Theme
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 import com.k1adili.k1cipher.ui.MainScreen
 import kotlinx.coroutines.launch
 
@@ -30,6 +32,11 @@ class MainActivity : ComponentActivity() {
     private val openLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let(vm::readFrom)
+        }
+
+    private val scanLauncher =
+        registerForActivityResult(ScanContract()) { result ->
+            result.contents?.let(vm::receiveQr)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +58,7 @@ class MainActivity : ComponentActivity() {
                     onShare = ::shareEncrypted,
                     onSave = { if (vm.canSave()) saveLauncher.launch("K1Cipher.k1c") },
                     onReadFile = { openLauncher.launch(arrayOf("*/*")) },
+                    onScanQr = ::scanQr,
                 )
             }
         }
@@ -77,6 +85,15 @@ class MainActivity : ComponentActivity() {
             else -> null
         }
         if (text != null) vm.receive(text.toString())
+    }
+
+    private fun scanQr() {
+        val options = ScanOptions()
+            .setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+            .setPrompt("Scan a K1 Cipher QR code")
+            .setBeepEnabled(false)
+            .setOrientationLocked(false)
+        scanLauncher.launch(options)
     }
 
     private fun shareEncrypted() {
