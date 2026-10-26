@@ -20,10 +20,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,7 +64,9 @@ fun MainScreen(
     onShare: () -> Unit,
     onSave: () -> Unit,
     onReadFile: () -> Unit,
+    onScanQr: () -> Unit,
 ) {
+    var showReadMenu by remember { mutableStateOf(false) }
     // The design is an English, left-to-right layout: keep it identical on every device locale.
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         BoxWithConstraints(
@@ -126,7 +134,7 @@ fun MainScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     K1Button("SAVE", K1.Blue, enabled = !busy, onClick = onSave)
-                    K1Button("READ FILE", K1.Blue, enabled = !busy, onClick = onReadFile)
+                    K1Button("READ FILE", K1.Blue, enabled = !busy, onClick = { showReadMenu = true })
                     K1Button(
                         "CLEAR", K1.ClearActive,
                         enabled = canClear && !busy,
@@ -160,6 +168,30 @@ fun MainScreen(
                 confirm = op == PendingOp.ENCRYPT,
                 onDismiss = vm::cancelPassword,
                 onOk = vm::onPassword,
+            )
+        }
+
+        // READ FILE keeps its place and look; it now offers two sources.
+        if (showReadMenu) {
+            AlertDialog(
+                onDismissRequest = { showReadMenu = false },
+                containerColor = K1.Box,
+                title = { Text("Read from", color = K1.Blue) },
+                text = {
+                    Column {
+                        TextButton(onClick = { showReadMenu = false; onReadFile() }) {
+                            Text("FILE", color = K1.Blue, fontWeight = FontWeight.Bold)
+                        }
+                        TextButton(onClick = { showReadMenu = false; onScanQr() }) {
+                            Text("QR CODE", color = K1.Teal, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showReadMenu = false }) {
+                        Text("CANCEL", color = K1.Subtitle)
+                    }
+                },
             )
         }
     }
