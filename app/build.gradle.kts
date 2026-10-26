@@ -12,8 +12,8 @@ android {
         applicationId = "com.k1adili.k1cipher"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.2"
     }
 
     buildTypes {
@@ -52,4 +52,6 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     // Argon2id (Android has no built-in Argon2)
     implementation("org.bouncycastle:bcprov-jdk18on:1.78.1")
+    // Offline QR scanner (works without Google Play services)
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }
